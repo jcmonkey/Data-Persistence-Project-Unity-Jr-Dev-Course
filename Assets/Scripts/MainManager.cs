@@ -11,6 +11,7 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    [SerializeField] private Text BestScore;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -22,6 +23,7 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        BestScore.text = "Best Score : " + PersistanceObject.Instance.name + " : " + PersistanceObject.Instance.score;
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -66,10 +68,17 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
+        int checkScore = PersistanceObject.Instance.score;
+        // check for hish score
+        if(checkScore < m_Points){
+            PersistanceObject.Instance.score = m_Points;
+        }
     }
 
     public void GameOver()
     {
+        PersistanceObject.Instance.SaveState();
+
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
